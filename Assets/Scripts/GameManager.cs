@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour
 
         currentNode = nodes[0];
         currentNodeNumber = 0;
+        player.SetPlayerTarget(currentNode);
     }
 
     private void Update()

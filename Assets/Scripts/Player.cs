@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
     private void Start()
     {
         controller = GetComponent<CharacterController>();
-        targetVector = (target.position - transform.position).normalized;
+        // targetVector = (target.position - transform.position).normalized;
     }
 
     private void Update()
