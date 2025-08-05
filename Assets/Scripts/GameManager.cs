@@ -1,9 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// TO DO: find a way to add nodes to 'nodes' when creating new ones in the editor mode and not having to use the nodeContainer at all.
-/// </summary>
 public class GameManager : MonoBehaviour
 {
     public Player player;
@@ -12,7 +9,6 @@ public class GameManager : MonoBehaviour
     public int currentNodeNumber;
     public float distanceFromTarget;
     public static GameManager Main { get; private set; }
-    [SerializeField] private Transform nodeContainer;
 
     private void Awake()
     {
@@ -32,10 +28,6 @@ public class GameManager : MonoBehaviour
         Camera.main.transform.parent = player.cameraContainer;
         Camera.main.transform.localPosition = Vector3.zero;
 
-        for (int i = 0; i < nodeContainer.childCount; i++)
-        {
-            nodes.Add(nodeContainer.GetChild(i));
-        }
         currentNode = nodes[0];
         currentNodeNumber = 0;
     }
