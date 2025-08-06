@@ -43,4 +43,11 @@ public class GameManager : MonoBehaviour
             player.SetPlayerTarget(currentNode);
         }
     }
+
+    // EDITOR
+    public void ReorderNodesList()
+    {
+        nodes.RemoveAll(n => n == null);
+        for(int i = 0; i < nodes.Count; i++) nodes[i].name = "Node" + Util.ReturnNodeSuffix(i);
+    }
 }
