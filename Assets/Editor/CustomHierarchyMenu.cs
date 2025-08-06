@@ -13,22 +13,7 @@ public class CustomHierarchyMenu
         GameObject instance = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
 
         int count = GameObject.FindGameObjectsWithTag("Node").Length - 1;
-        string suffix;
         Transform nodeContainer;
-
-        switch (count / 10)                                                                             //Assigning a suffix after "Node" in the xxx format, ranging between 0 and 999.
-        {
-            case < 1:
-                suffix = "00" + count;
-                break;
-
-            case < 10:
-                suffix = "0" + count;
-                break;
-
-            default:
-                return;
-        }
 
         if (GameObject.Find("NodeContainer"))                                                           //Finding the NodeContainer gameobject or creating one if it doesn't exist.
             nodeContainer = GameObject.Find("NodeContainer").transform;
@@ -39,25 +24,20 @@ public class CustomHierarchyMenu
             nodeContainer = nc.transform;
         }
 
-        instance.name = "Node" + suffix;
+        instance.name = "Node" + Util.ReturnNodeSuffix(count);
         if(nodeContainer.childCount != 0)                                                               //Assigning the position of the new node based on the previous node's position or at Vector3.zero.
         {
             Transform lastChild = nodeContainer.GetChild(nodeContainer.childCount - 1);
-            instance.transform.position = new Vector3(lastChild.position.x + 2.5f, 0f, lastChild.position.z + 2.5f);
+            Vector3 dir = (instance.transform.position - lastChild.transform.position).normalized;
+            instance.transform.position = new Vector3(lastChild.position.x + dir.x + 1f, 0f, lastChild.position.z + dir.z + 1f);
         }
         else
             instance.transform.position = Vector3.zero;
-
-        ///TO DO
-        ///Have the new node positioned a unit away from the previous one based on the direction between the previous one and the one before it.
 
         instance.transform.SetParent(nodeContainer);                                                    //Assigning the node's parent to NodeContainer and adding it in the GameManager's "nodes" list.
 
         GameManager gm = GameObject.Find("GameManager").GetComponent<GameManager>();
         gm.nodes.Add(instance.transform);
-
-        ///TO DO
-        ///Removing any nodes from the scene should accordingly rearrange the GameManager's "nodes" list by removing the empty element and renaming the nodes after that correctly.
 
         EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
         Selection.activeObject = instance;
