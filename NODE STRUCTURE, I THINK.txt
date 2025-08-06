@@ -1,0 +1,34 @@
+What to do if the player nears a node.
+
+ - Direct the player to the next node
+		OR
+ - Make the player look around or at something
+
+Every single event must be in a stack and should have a duration. These nodes
+can also affect the speed of the character.
+
+Example of a node's stack: -
+EVENT NAME		EVENT PARAMS		EVENT DURATION
+event_look		Y + 20 degrees		500ms
+event_walk		forward, speed=1	250ms
+event_exit		nil			nil (0ms)
+
+========================================
+
+EVENT LIST
+
+"event_look"
+Param: rotation (camera X rotation, player Y rotation, camera Z rotation)
+
+"event_walk"
+Params: direction, player speed
+(Is direction really required? I'm better off having a node for smaller movements
+and what not.)
+
+"event_exit" simply assigns the next node for the player to move to.
+
+"event_stop" stops the player for a set duration.
+
+========================================
+
+Could use more to work with.
