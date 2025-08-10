@@ -9,25 +9,25 @@ can also affect the speed of the character.
 
 Example of a node's stack: -
 EVENT NAME		EVENT PARAMS		EVENT DURATION
-event_look		Y + 20 degrees		500ms
-event_walk		forward, speed=1	250ms
-event_exit		nil			nil (0ms)
+look			Y + 20 degrees		500ms
+walk			forward, speed=1	250ms
+exit			nil			nil (0ms)
 
 ========================================
 
 EVENT LIST
 
-"event_look"
+"look"
 Param: rotation (camera X rotation, player Y rotation, camera Z rotation)
 
-"event_walk"
+"walk"
 Params: direction, player speed
 (Is direction really required? I'm better off having a node for smaller movements
 and what not.)
 
-"event_exit" simply assigns the next node for the player to move to.
+"exit" simply assigns the next node for the player to move to.
 
-"event_stop" stops the player for a set duration.
+"stop" stops the player for a set duration.
 
 ========================================
 

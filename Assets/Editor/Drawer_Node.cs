@@ -1,63 +1,12 @@
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using System.Text.RegularExpressions;
 
-public enum DataType { Float, Vector3 }
+//public enum DataType { Float, Vector3 }
 
-//[CustomPropertyDrawer(typeof(TestListItem))]
-//public class TestListItemDrawer : PropertyDrawer
-//{
-//    public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
-//    {
-//        EditorGUI.BeginProperty(position, label, property);
-
-//        // Get properties
-//        SerializedProperty eventType = property.FindPropertyRelative("eventType");
-//        SerializedProperty param_v = property.FindPropertyRelative("param_v");
-//        SerializedProperty param_f = property.FindPropertyRelative("param_f");
-
-//        // Calculate rects for fields
-//        Rect lineRect = new Rect(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight);
-//        float lineHeight = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
-
-//        // Draw eventType field
-//        EditorGUI.PropertyField(lineRect, eventType, new GUIContent("Type"));
-//        lineRect.y += lineHeight;
-
-//        // Draw conditional field based on eventType
-//        if (eventType.enumValueIndex == (int)DataType.Vector3)
-//        {
-//            EditorGUI.PropertyField(lineRect, param_v, new GUIContent("Vector3 Value"));
-//        }
-//        else if (eventType.enumValueIndex == (int)DataType.Float)
-//        {
-//            EditorGUI.PropertyField(lineRect, param_f, new GUIContent("Float Value"));
-//        }
-
-//        EditorGUI.EndProperty();
-//    }
-
-//    public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
-//    {
-//        // Calculate height: one line for eventType, one line for either param_v or param_f
-//        SerializedProperty eventType = property.FindPropertyRelative("eventType");
-//        float height = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
-
-//        if (eventType.enumValueIndex == (int)DataType.Vector3 || eventType.enumValueIndex == (int)DataType.Float)
-//        {
-//            height += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
-//        }
-
-//        return height;
-//    }
-//}
-
-[CustomPropertyDrawer(typeof(TestListItem))]
-public class TestListItemDrawer : PropertyDrawer
+[CustomPropertyDrawer(typeof(NodeListItem))]
+public class NodeListItemDrawer : PropertyDrawer
 {
-    // Static dictionary to store foldout states per property path
-    private static readonly Dictionary<string, bool> foldoutStates = new Dictionary<string, bool>();
-
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
         EditorGUI.BeginProperty(position, label, property);
@@ -66,39 +15,42 @@ public class TestListItemDrawer : PropertyDrawer
         SerializedProperty eventType = property.FindPropertyRelative("eventType");
         SerializedProperty param_v = property.FindPropertyRelative("param_v");
         SerializedProperty param_f = property.FindPropertyRelative("param_f");
+        SerializedProperty duration = property.FindPropertyRelative("duration");
 
-        // Use property path as a unique key for foldout state
-        string propertyPath = property.propertyPath;
-        if (!foldoutStates.ContainsKey(propertyPath))
-        {
-            foldoutStates[propertyPath] = false; // Default to collapsed
-        }
-
-        // Calculate rects for fields
-        Rect lineRect = new Rect(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight);
-        float lineHeight = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
+        // Get the index of the list element for serial number
+        int index = GetElementIndex(property);
+        string eventName = eventType.enumValueIndex >= 0 ? eventType.enumDisplayNames[eventType.enumValueIndex] : "None";
+        float durationValue = duration.floatValue;
+        label.text = $"#{index + 1} {eventName} {durationValue:F1}";
 
         // Draw foldout
-        foldoutStates[propertyPath] = EditorGUI.Foldout(lineRect, foldoutStates[propertyPath], label, true);
-        lineRect.y += lineHeight;
+        Rect foldoutRect = new Rect(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight);
+        property.isExpanded = EditorGUI.Foldout(foldoutRect, property.isExpanded, label, true);
+        float lineHeight = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
 
         // Draw fields if expanded
-        if (foldoutStates[propertyPath])
+        if (property.isExpanded)
         {
+            // Indent the content
             EditorGUI.indentLevel++;
+            Rect lineRect = new Rect(position.x, position.y + lineHeight, position.width, EditorGUIUtility.singleLineHeight);
+
             // Draw eventType field
             EditorGUI.PropertyField(lineRect, eventType, new GUIContent("Type"));
             lineRect.y += lineHeight;
 
             // Draw conditional field based on eventType
-            if (eventType.enumValueIndex == (int)DataType.Vector3)
+            if (eventType.enumValueIndex == (int)Util.EventType.look)
             {
                 EditorGUI.PropertyField(lineRect, param_v, new GUIContent("Vector3 Value"));
             }
-            else if (eventType.enumValueIndex == (int)DataType.Float)
+            else if (eventType.enumValueIndex == /*(int)DataType.Float*/ (int)Util.EventType.stop)
             {
                 EditorGUI.PropertyField(lineRect, param_f, new GUIContent("Float Value"));
             }
+
+            lineRect.y += lineHeight;
+            EditorGUI.PropertyField(lineRect, duration, new GUIContent("Duration"));
             EditorGUI.indentLevel--;
         }
 
@@ -107,24 +59,33 @@ public class TestListItemDrawer : PropertyDrawer
 
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
-        // Base height: one line for the foldout
         float height = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
 
-        // Add height for fields if expanded
-        string propertyPath = property.propertyPath;
-        if (foldoutStates.ContainsKey(propertyPath) && foldoutStates[propertyPath])
+        if (property.isExpanded)
         {
-            // One line for eventType
-            height += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
-
-            // One line for either param_v or param_f
             SerializedProperty eventType = property.FindPropertyRelative("eventType");
-            if (eventType.enumValueIndex == (int)DataType.Vector3 || eventType.enumValueIndex == (int)DataType.Float)
+            height += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing; // For the "eventType" field
+            if (eventType != null)      ///TO DO: remove that extra space for parameters? Or replace it with a boolean? I don't know.
             {
-                height += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
+                height += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing; // For the "param_v" or "param_f'
             }
+            height += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing; // For the "duration" field.
         }
 
         return height;
+    }
+
+    private int GetElementIndex(SerializedProperty property)
+    {
+        // Extract the index from the property path using regex
+        string path = property.propertyPath;
+        // Match patterns like "testListItem.Array.data[123]"
+        Regex regex = new Regex(@"\.Array\.data\[(\d+)\]");
+        Match match = regex.Match(path);
+        if (match.Success && int.TryParse(match.Groups[1].Value, out int index))
+        {
+            return index;
+        }
+        return -1; // Fallback if index cannot be determined
     }
 }

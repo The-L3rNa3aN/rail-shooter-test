@@ -9,4 +9,12 @@ public static class Util
             _ => number.ToString()
         };
     }
+
+    public enum EventType
+    {
+        look,
+        walk,
+        stop,
+        hold
+    }
 }
