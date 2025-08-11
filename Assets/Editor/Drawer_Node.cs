@@ -1,12 +1,13 @@
 using UnityEditor;
 using UnityEngine;
 using System.Text.RegularExpressions;
-
-//public enum DataType { Float, Vector3 }
+using System.Runtime.Remoting.Messaging;
 
 [CustomPropertyDrawer(typeof(NodeListItem))]
 public class NodeListItemDrawer : PropertyDrawer
 {
+    public bool IsParamedEvent(int i) { return i == (int)Util.EventType.look || i == (int)Util.EventType.walk; }
+
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
         EditorGUI.BeginProperty(position, label, property);
@@ -24,7 +25,7 @@ public class NodeListItemDrawer : PropertyDrawer
         label.text = $"#{index + 1} {eventName} {durationValue:F1}";
 
         // Draw foldout
-        Rect foldoutRect = new Rect(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight);
+        Rect foldoutRect = new(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight);
         property.isExpanded = EditorGUI.Foldout(foldoutRect, property.isExpanded, label, true);
         float lineHeight = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
 
@@ -33,7 +34,7 @@ public class NodeListItemDrawer : PropertyDrawer
         {
             // Indent the content
             EditorGUI.indentLevel++;
-            Rect lineRect = new Rect(position.x, position.y + lineHeight, position.width, EditorGUIUtility.singleLineHeight);
+            Rect lineRect = new(position.x, position.y + lineHeight, position.width, EditorGUIUtility.singleLineHeight);
 
             // Draw eventType field
             EditorGUI.PropertyField(lineRect, eventType, new GUIContent("Type"));
@@ -42,14 +43,14 @@ public class NodeListItemDrawer : PropertyDrawer
             // Draw conditional field based on eventType
             if (eventType.enumValueIndex == (int)Util.EventType.look)
             {
-                EditorGUI.PropertyField(lineRect, param_v, new GUIContent("Vector3 Value"));
+                EditorGUI.PropertyField(lineRect, param_v, new GUIContent("Look At"));
             }
-            else if (eventType.enumValueIndex == /*(int)DataType.Float*/ (int)Util.EventType.stop)
+            else if (eventType.enumValueIndex == (int)Util.EventType.walk)
             {
-                EditorGUI.PropertyField(lineRect, param_f, new GUIContent("Float Value"));
+                EditorGUI.PropertyField(lineRect, param_f, new GUIContent("Speed"));
             }
 
-            lineRect.y += lineHeight;
+            if(IsParamedEvent(eventType.enumValueIndex)) lineRect.y += lineHeight;
             EditorGUI.PropertyField(lineRect, duration, new GUIContent("Duration"));
             EditorGUI.indentLevel--;
         }
@@ -65,7 +66,7 @@ public class NodeListItemDrawer : PropertyDrawer
         {
             SerializedProperty eventType = property.FindPropertyRelative("eventType");
             height += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing; // For the "eventType" field
-            if (eventType != null)      ///TO DO: remove that extra space for parameters? Or replace it with a boolean? I don't know.
+            if (IsParamedEvent(eventType.enumValueIndex))
             {
                 height += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing; // For the "param_v" or "param_f'
             }
@@ -80,7 +81,7 @@ public class NodeListItemDrawer : PropertyDrawer
         // Extract the index from the property path using regex
         string path = property.propertyPath;
         // Match patterns like "testListItem.Array.data[123]"
-        Regex regex = new Regex(@"\.Array\.data\[(\d+)\]");
+        Regex regex = new(@"\.Array\.data\[(\d+)\]");
         Match match = regex.Match(path);
         if (match.Success && int.TryParse(match.Groups[1].Value, out int index))
         {

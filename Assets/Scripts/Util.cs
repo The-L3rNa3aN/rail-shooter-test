@@ -12,9 +12,9 @@ public static class Util
 
     public enum EventType
     {
-        look,
-        walk,
-        stop,
-        hold
+        look,       //Makes the player look around. Vector3 params for rotation.
+        walk,       //Let's the player proceed to next node. float params for player speed.
+        stop,       //Stops the player in the current node. No params.
+        hold        //Makes the player hold their fire. No params.
     }
 }
