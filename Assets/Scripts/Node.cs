@@ -9,6 +9,7 @@ public class NodeListItem
     public Util.EventType eventType;
     public Vector3 param_v;
     public float param_f;
+    public bool param_b;
     public float duration;
 }
 
