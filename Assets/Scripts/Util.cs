@@ -10,11 +10,17 @@ public static class Util
         };
     }
 
+    /* EVENT NAME           PARAMS          DURATION
+       ==========           ==========      ==========
+       look                 Vector3         yes
+       walk                 float           no
+       stop                 nil             yes
+       hold                 nil             yes         */
     public enum EventType
     {
-        look,       //Makes the player look around. Vector3 params for rotation.
-        walk,       //Let's the player proceed to next node. float params for player speed.
-        stop,       //Stops the player in the current node. No params.
-        hold        //Makes the player hold their fire. No params.
+        look,       //Makes the player look around.
+        walk,       //Let's the player proceed to next node.
+        stop,       //Stops the player in the current node.
+        hold        //Makes the player hold their fire.
     }
 }
