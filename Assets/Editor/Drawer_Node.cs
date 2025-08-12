@@ -51,7 +51,7 @@ public class NodeListItemDrawer : PropertyDrawer
             }
 
             if(IsParamedEvent(eventType.enumValueIndex)) lineRect.y += lineHeight;
-            EditorGUI.PropertyField(lineRect, duration, new GUIContent("Duration"));
+            if(eventType.enumValueIndex != (int)Util.EventType.walk) EditorGUI.PropertyField(lineRect, duration, new GUIContent("Duration"));
             EditorGUI.indentLevel--;
         }
 
@@ -70,7 +70,7 @@ public class NodeListItemDrawer : PropertyDrawer
             {
                 height += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing; // For the "param_v" or "param_f'
             }
-            height += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing; // For the "duration" field.
+            if(eventType.enumValueIndex != (int)Util.EventType.walk) height += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing; // For the "duration" field.
         }
 
         return height;
