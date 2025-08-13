@@ -1,8 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-//public enum EventType { test_1, test_2 }
-
 [System.Serializable]
 public class NodeListItem
 {
@@ -15,7 +13,7 @@ public class NodeListItem
 
 public class Node : MonoBehaviour
 {
-    public List<NodeListItem> nodeListItem;
+    public List<NodeListItem> nodeEventList;
 
     private void OnTriggerEnter(Collider other)
     {
