@@ -33,15 +33,22 @@ public class GameManager : MonoBehaviour
         player.SetPlayerTarget(currentNode);
     }
 
-    private void Update()
+    // private void Update()
+    // {
+    //     distanceFromTarget = Vector3.Distance(currentNode.position, player.transform.position);
+    //     if(distanceFromTarget <= 0.1f)
+    //     {
+    //         currentNodeNumber++;
+    //         currentNode = nodes[currentNodeNumber];
+    //         player.SetPlayerTarget(currentNode);
+    //     }
+    // }
+
+    public void NextNode()
     {
-        distanceFromTarget = Vector3.Distance(currentNode.position, player.transform.position);
-        if(distanceFromTarget <= 0.1f)
-        {
-            currentNodeNumber++;
-            currentNode = nodes[currentNodeNumber];
-            player.SetPlayerTarget(currentNode);
-        }
+        currentNodeNumber++;
+        currentNode = nodes[currentNodeNumber];
+        player.SetPlayerTarget(currentNode);
     }
 
     // EDITOR
