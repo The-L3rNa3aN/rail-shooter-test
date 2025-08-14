@@ -9,6 +9,12 @@ public class Player : MonoBehaviour
     private CharacterController controller;
     private Vector3 targetVector;
 
+    [Header("EventType.look")]
+    private Quaternion targetRotation;
+    private float rotationDuration;
+    private bool startRot;
+    private float elapsedTime = 0f;
+
     private void Start()
     {
         controller = GetComponent<CharacterController>();
@@ -17,6 +23,8 @@ public class Player : MonoBehaviour
     private void Update()
     {
         controller.Move(Time.deltaTime * pVelocity * targetVector);
+
+        Action_Look2(); // EventType.look using Update()
     }
 
     public void SetPlayerTarget(Transform _target) => targetVector = (_target.position - transform.position).normalized;
@@ -26,7 +34,10 @@ public class Player : MonoBehaviour
         switch(action.eventType)
         {
             case Util.EventType.look:
-                StartCoroutine(Action_Look(action.param_v, action.duration));
+                //StartCoroutine(Action_Look(action.param_v, action.duration));
+                targetRotation = Quaternion.Euler(action.param_v);
+                rotationDuration = action.duration;
+                startRot = true;
                 break;
     
             case Util.EventType.walk:
@@ -53,6 +64,24 @@ public class Player : MonoBehaviour
             cameraContainer.transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, t);
             elapsedTime += Time.deltaTime;
             yield return null;
+        }
+    }
+
+    public void Action_Look2()
+    {
+        if(startRot)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsedTime / rotationDuration);
+            cameraContainer.rotation = Quaternion.Lerp(cameraContainer.rotation, targetRotation, t);
+            //Debug.Log($"elapsedTime: {elapsedTime}, t: {t}");
+            Debug.Log($"camera Rotation: {cameraContainer.rotation}, t: {t}");    //It works but weirdly. How is that?
+
+            if (t >= 1f)
+            {
+                startRot = false;
+                elapsedTime = 0f;
+            }
         }
     }
 
