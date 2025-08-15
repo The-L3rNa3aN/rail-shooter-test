@@ -14,15 +14,17 @@ public static class Util
        ==========           ==========      ==========
        look                 Vector3         yes
        walk                 float           no
-       stop                 bool            yes
-       hold                 bool            yes
-       open                 nil             no         */
+       stop                 nil             no
+       hold                 nil             no
+       open                 nil             no
+       wait                 nil             yes        */
     public enum EventType
     {
         look,       //Makes the player look around.
         walk,       //Let's the player proceed to next node.
         stop,       //Stops the player in the current node.
         hold,       //Makes the player hold their fire.
-        open        //Allows the player to resume fire.
+        open,       //Allows the player to resume fire.
+        wait        //Delay's operations for a specified duration.
     }
 }

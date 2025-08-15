@@ -6,14 +6,10 @@ public class Player : MonoBehaviour
 {
     public Transform cameraContainer;
     public float pVelocity = 5f;
+    public bool isWalking = true;
+    public bool isHoldingFire = false;
     private CharacterController controller;
     private Vector3 targetVector;
-
-    [Header("EventType.look")]
-    private Quaternion targetRotation;
-    private float rotationDuration;
-    private bool startRot;
-    private float elapsedTime = 0f;
 
     private void Start()
     {
@@ -22,9 +18,7 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        controller.Move(Time.deltaTime * pVelocity * targetVector);
-
-        Action_Look2(); // EventType.look using Update()
+        if (isWalking) controller.Move(Time.deltaTime * pVelocity * targetVector);
     }
 
     public void SetPlayerTarget(Transform _target) => targetVector = (_target.position - transform.position).normalized;
@@ -34,58 +28,69 @@ public class Player : MonoBehaviour
         switch(action.eventType)
         {
             case Util.EventType.look:
-                //StartCoroutine(Action_Look(action.param_v, action.duration));
-                targetRotation = Quaternion.Euler(action.param_v);
-                rotationDuration = action.duration;
-                startRot = true;
+                StartCoroutine(Action_Look(action.param_v, action.duration));
                 break;
     
             case Util.EventType.walk:
+                //isWalking = true;
+                StartCoroutine(Action_Walk(true));
+                pVelocity = action.param_f;
                 break;
             
             case Util.EventType.stop:
+                //isWalking = false;
+                StartCoroutine(Action_Walk(false));
+                break;
+
             case Util.EventType.hold:
+                //isHoldingFire = true;
+                StartCoroutine(Action_HoldFire(true));
                 break;
     
             case Util.EventType.open:
+                //isHoldingFire = false;
+                StartCoroutine(Action_HoldFire(false));
+                break;
+
+            case Util.EventType.wait:
+                StartCoroutine(Action_Wait(action.duration));
                 break;
         }
     }
 
-    //Works but it feels stiff.
     public IEnumerator Action_Look(Vector3 v, float f)
     {
         float elapsedTime = 0f;
-        Quaternion targetRotation = Quaternion.Euler(v);
+        Quaternion _start = cameraContainer.rotation;
+        Quaternion _target = Quaternion.Euler(v);
 
         while (elapsedTime < f)
         {
-            float t = elapsedTime / f;
-            cameraContainer.transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, t);
             elapsedTime += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsedTime / f);
+            float t2 = Mathf.SmoothStep(0f, 1f, t);
+            cameraContainer.rotation = Quaternion.Slerp(_start, _target, t2);
             yield return null;
         }
+
+        cameraContainer.rotation = _target;
     }
 
-    public void Action_Look2()
-    {
-        if(startRot)
-        {
-            elapsedTime += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsedTime / rotationDuration);
-            cameraContainer.rotation = Quaternion.Lerp(cameraContainer.rotation, targetRotation, t);
-            //Debug.Log($"elapsedTime: {elapsedTime}, t: {t}");
-            Debug.Log($"camera Rotation: {cameraContainer.rotation}, t: {t}");    //It works but weirdly. How is that?
+    public IEnumerator Action_Wait(float f) { yield return new WaitForSeconds(f); }
 
-            if (t >= 1f)
-            {
-                startRot = false;
-                elapsedTime = 0f;
-            }
-        }
+    public IEnumerator Action_Walk(bool b)
+    {
+        isWalking = b;
+        yield return null;
+    }
+
+    public IEnumerator Action_HoldFire(bool b)
+    {
+        isHoldingFire = b;
+        yield return null;
     }
 
     ///OTHER METHODS: -
-    ///1. Update()
+    ///1. Update() -> works like a charm but can be performance intensive.
     ///2. DoTween
 }

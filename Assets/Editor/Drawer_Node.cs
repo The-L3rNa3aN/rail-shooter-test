@@ -5,7 +5,8 @@ using System.Text.RegularExpressions;
 [CustomPropertyDrawer(typeof(NodeListItem))]
 public class NodeListItemDrawer : PropertyDrawer
 {
-    public bool NoDurationEvents(int i) { return i == (int)Util.EventType.walk || i == (int)Util.EventType.open; }
+    public bool NoDurationEvents(int i) { return i == (int)Util.EventType.walk || i == (int)Util.EventType.open || i == (int)Util.EventType.stop || i == (int)Util.EventType.hold; }
+    public bool NoParamEvents(int i) { return i == (int)Util.EventType.stop || i == (int)Util.EventType.hold || i == (int)Util.EventType.open || i == (int)Util.EventType.wait; }
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
@@ -22,7 +23,7 @@ public class NodeListItemDrawer : PropertyDrawer
         int index = GetElementIndex(property);
         string eventName = eventType.enumValueIndex >= 0 ? eventType.enumDisplayNames[eventType.enumValueIndex] : "None";
         float durationValue = duration.floatValue;
-        label.text = eventType.enumValueIndex != (int)Util.EventType.walk ? $"#{index + 1} {eventName} {durationValue:F1}" : $"#{index + 1} {eventName}";
+        label.text = !NoDurationEvents(eventType.enumValueIndex) ? $"#{index + 1} {eventName} {durationValue:F1}s" : $"#{index + 1} {eventName}";
 
         // Draw foldout
         Rect foldoutRect = new(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight);
@@ -51,13 +52,12 @@ public class NodeListItemDrawer : PropertyDrawer
                     EditorGUI.PropertyField(lineRect, param_f, new GUIContent("Speed"));
                     break;
 
-                case (int)Util.EventType.stop:
-                case (int)Util.EventType.hold:
-                    EditorGUI.PropertyField(lineRect, param_b, new GUIContent("Indefinite?"));
-                    break;
+                //case (int)Util.EventType.hold:
+                //    EditorGUI.PropertyField(lineRect, param_b, new GUIContent("Indefinite?"));
+                //    break;
             }
 
-            if(eventType.enumValueIndex != (int)Util.EventType.open) lineRect.y += lineHeight;
+            if(!NoParamEvents(eventType.enumValueIndex)) lineRect.y += lineHeight;
             if(!NoDurationEvents(eventType.enumValueIndex)) EditorGUI.PropertyField(lineRect, duration, new GUIContent("Duration"));
             EditorGUI.indentLevel--;
         }
@@ -73,9 +73,9 @@ public class NodeListItemDrawer : PropertyDrawer
         {
             SerializedProperty eventType = property.FindPropertyRelative("eventType");
             height += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing; // For the "eventType" field
-            if (eventType.enumValueIndex != (int)Util.EventType.open)
+            if (!NoParamEvents(eventType.enumValueIndex))
             {
-                height += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing; // For the "param_v" / "param_f" / "isIndefinite
+                height += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing; // For the "param_v" / "param_f" / "isIndefinite"
             }
             if(!NoDurationEvents(eventType.enumValueIndex)) height += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing; // For the "duration" field.
         }
