@@ -18,11 +18,7 @@ public class Node : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         Player player = other.GetComponent<Player>();
-        if(player)
-        {
-            foreach(NodeListItem item in nodeEventList)
-                player.NodeAction(item);
-        }
+        if (player) StartCoroutine(player.ParseNodeActions(nodeEventList));
 
         GameManager.Main.NextNode();
     }
