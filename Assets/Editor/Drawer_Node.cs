@@ -16,7 +16,7 @@ public class NodeListItemDrawer : PropertyDrawer
         SerializedProperty eventType = property.FindPropertyRelative("eventType");
         SerializedProperty param_v = property.FindPropertyRelative("param_v");
         SerializedProperty param_f = property.FindPropertyRelative("param_f");
-        SerializedProperty param_b = property.FindPropertyRelative("param_b");
+        //SerializedProperty param_b = property.FindPropertyRelative("param_b");
         SerializedProperty duration = property.FindPropertyRelative("duration");
 
         // Get the index of the list element for serial number

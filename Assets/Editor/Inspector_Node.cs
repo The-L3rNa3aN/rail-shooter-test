@@ -12,6 +12,23 @@ public class DataListEditor : Editor
         SerializedProperty dataList = serializedObject.FindProperty("nodeEventList");
         EditorGUILayout.PropertyField(dataList, new GUIContent("Event List"), true);
 
+        if(GUILayout.Button("Reposition camera to node")) RepositionCameraToNode();
+
         serializedObject.ApplyModifiedProperties();
+    }
+
+    private void RepositionCameraToNode()
+    {
+        Node node = (Node)target;
+
+        if(Physics.Raycast(node.transform.position, Vector3.down, out RaycastHit hit))
+        {
+            if(hit.collider.gameObject.layer == 6)
+            {
+                Vector3 n = hit.point + hit.normal * Util.CamGroundDist;
+                Camera.main.transform.position = n;
+
+            }
+        }
     }
 }

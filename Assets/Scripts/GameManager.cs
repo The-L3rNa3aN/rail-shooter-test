@@ -27,28 +27,21 @@ public class GameManager : MonoBehaviour
     {
         Camera.main.transform.parent = player.cameraContainer;
         Camera.main.transform.localPosition = Vector3.zero;
+        Camera.main.transform.rotation = Camera.main.transform.parent.rotation;
 
         currentNode = nodes[0];
         currentNodeNumber = 0;
         player.SetPlayerTarget(currentNode);
     }
 
-    // private void Update()
-    // {
-    //     distanceFromTarget = Vector3.Distance(currentNode.position, player.transform.position);
-    //     if(distanceFromTarget <= 0.1f)
-    //     {
-    //         currentNodeNumber++;
-    //         currentNode = nodes[currentNodeNumber];
-    //         player.SetPlayerTarget(currentNode);
-    //     }
-    // }
-
     public void NextNode()
     {
         currentNodeNumber++;
-        currentNode = nodes[currentNodeNumber];
-        player.SetPlayerTarget(currentNode);
+        if(currentNodeNumber != nodes.Count)        //When there is no node after the last one.
+        {
+            currentNode = nodes[currentNodeNumber];
+            player.SetPlayerTarget(currentNode);
+        }
     }
 
     // EDITOR

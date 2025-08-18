@@ -1,5 +1,6 @@
 public static class Util
 {
+    public static float CamGroundDist = 1.77f;
     public static string ReturnNodeSuffix(int number)
     {
         return (number / 10) switch
