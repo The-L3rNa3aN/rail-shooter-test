@@ -24,6 +24,7 @@ public class NodeListItemDrawer : PropertyDrawer
         string eventName = eventType.enumValueIndex >= 0 ? eventType.enumDisplayNames[eventType.enumValueIndex] : "None";
         float durationValue = duration.floatValue;
         label.text = !NoDurationEvents(eventType.enumValueIndex) ? $"#{index + 1} {eventName} {durationValue:F1}s" : $"#{index + 1} {eventName}";
+        if (NoDurationEvents(eventType.enumValueIndex)) duration.floatValue = 0f;       // Set 'duration' of any non-duration event to 0.
 
         // Draw foldout
         Rect foldoutRect = new(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight);
