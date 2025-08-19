@@ -18,7 +18,10 @@ public static class Util
        stop                 nil             no
        hold                 nil             no
        open                 nil             no
-       wait                 nil             yes        */
+       wait                 nil             yes
+       jump                 float           yes
+       duck                 nil             no
+       rise                 nil             no        */
     public enum EventType
     {
         look,       //Makes the player look around.
@@ -26,6 +29,9 @@ public static class Util
         stop,       //Stops the player in the current node.
         hold,       //Makes the player hold their fire.
         open,       //Allows the player to resume fire.
-        wait        //Delay's operations for a specified duration.
+        wait,       //Delay's operations for a specified duration.
+        jump,       //Jumps with a specified height and duration.
+        duck,       //Make's the player crouch. WILL NOT AFFECT PLAYER SPEED.
+        rise        //Make's the player stand up.
     }
 }

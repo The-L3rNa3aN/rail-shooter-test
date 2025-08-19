@@ -9,6 +9,7 @@ public class Player : MonoBehaviour
     public float pVelocity = 5f;
     public bool isWalking = true;
     public bool isHoldingFire = false;
+    public bool willStop = false;
     private CharacterController controller;
     private Vector3 targetVector;
 
@@ -19,7 +20,18 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        if (isWalking) controller.Move(Time.deltaTime * pVelocity * targetVector);
+        //if (isWalking) controller.Move(Time.deltaTime * pVelocity * targetVector);
+
+        float distFromNode = Vector3.Distance(transform.position, GameManager.Main.currentNode.position);
+        float currSpeed = pVelocity;
+        if (willStop && distFromNode < 2f)
+        {
+            currSpeed = pVelocity * (distFromNode / 2f);
+            //willStop = false;
+            //GameManager.Main.NextNode();
+        }
+
+        controller.Move(Time.deltaTime * currSpeed * targetVector);
     }
 
     public void SetPlayerTarget(Transform _target) => targetVector = (_target.position - transform.position).normalized;
@@ -49,11 +61,13 @@ public class Player : MonoBehaviour
 
                 case Util.EventType.walk:
                     isWalking = true;
+                    willStop = false;
                     pVelocity = action.param_f;
+                    GameManager.Main.NextNode();
                     break;
 
                 case Util.EventType.stop:
-                    isWalking = false;
+                    //isWalking = false;
                     break;
 
                 case Util.EventType.hold:
