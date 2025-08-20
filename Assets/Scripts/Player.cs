@@ -30,7 +30,7 @@ public class Player : MonoBehaviour
             currSpeed = pVelocity * (distFromNode / 2f);
         }
 
-        controller.Move(Time.deltaTime * currSpeed * targetVector);
+        if(isWalking) controller.Move(Time.deltaTime * currSpeed * targetVector);
     }
 
     public void SetPlayerTarget(Transform _target) => targetVector = (_target.position - transform.position).normalized;
