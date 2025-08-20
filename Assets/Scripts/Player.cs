@@ -7,11 +7,12 @@ public class Player : MonoBehaviour
 {
     public Transform cameraContainer;
     public float pVelocity = 5f;
-    public bool isWalking = true;
+    public bool isWalking = true; // <--- Not being used anywhere anymore. Should I remove it?
     public bool isHoldingFire = false;
     public bool willStop = false;
     private CharacterController controller;
     private Vector3 targetVector;
+    public bool test = false;
 
     private void Start()
     {
@@ -27,8 +28,6 @@ public class Player : MonoBehaviour
         if (willStop && distFromNode < 2f)
         {
             currSpeed = pVelocity * (distFromNode / 2f);
-            //willStop = false;
-            //GameManager.Main.NextNode();
         }
 
         controller.Move(Time.deltaTime * currSpeed * targetVector);
@@ -60,7 +59,6 @@ public class Player : MonoBehaviour
                     break;
 
                 case Util.EventType.walk:
-                    isWalking = true;
                     willStop = false;
                     pVelocity = action.param_f;
                     GameManager.Main.NextNode();
