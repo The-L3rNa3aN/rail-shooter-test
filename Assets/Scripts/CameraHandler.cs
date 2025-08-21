@@ -2,17 +2,42 @@ using UnityEngine;
 
 public class CameraHandler : MonoBehaviour
 {
-    public float amplitude = 6.25f;
-    public float frequency = 0.004f;
+    public bool isSine = true;
+
+    [Header("Sine Wave Sway")]
+    public float x_amplitude = 0.2f;
+    public float y_amplitude = 0.1f;
+
+    public float x_frequency = 2f;
+    public float y_frequency = 1f;
+
+    [Header("Perlin Noise Sway")]
+    public float speed = 1f;
+    public float intensity = 0.1f;
 
     private void Update()
     {
-        float ampX = amplitude / 2;
-        float freX = frequency / 2;
+        if(Input.GetKeyDown(KeyCode.Space)) isSine = !isSine;
 
-        float _x = transform.parent.eulerAngles.x + ampX + Mathf.Sin(freX);
-        float _y = transform.parent.eulerAngles.y + amplitude + Mathf.Sin(frequency);
+        if(isSine)
+            SineWaveSway();
+        else
+            PerlinNoiseSway();
+    }
 
-        transform.Rotate(_x, _y, transform.parent.eulerAngles.z);
+    private void SineWaveSway()
+    {
+        float _x = x_amplitude * Mathf.Sin(x_frequency * Time.time);
+        float _y = y_amplitude * Mathf.Sin(y_frequency * Time.time);
+
+        transform.localEulerAngles = new Vector3(_x, _y, transform.localEulerAngles.z);
+    }
+
+    private void PerlinNoiseSway()
+    {
+        float _x = Mathf.PerlinNoise(Time.time * speed, 0f) * 2f - 1f;
+        float _y = Mathf.PerlinNoise(0f, Time.time * speed) * 2f - 1f;
+
+        transform.localEulerAngles = new Vector3(_x, _y, transform.localEulerAngles.z);
     }
 }

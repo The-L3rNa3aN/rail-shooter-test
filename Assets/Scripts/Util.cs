@@ -1,6 +1,9 @@
+using UnityEngine;
+
 public static class Util
 {
     public static float CamGroundDist = 1.77f;
+
     public static string ReturnNodeSuffix(int number)
     {
         return (number / 10) switch
@@ -9,6 +12,16 @@ public static class Util
             < 10 => "0" + number,
             _ => number.ToString()
         };
+    }
+
+    public static Vector3 QuadraticBezierPoint(float t, Vector3 p0, Vector3 p1, Vector3 p2)
+    {
+        float u = 1 - t;
+        float tt = t * t;
+        float uu = u * u;
+
+        Vector3 point = (uu * p0) + (2 * u * t * p1) + (tt * p2);
+        return point;
     }
 
     /* EVENT NAME           PARAMS          DURATION

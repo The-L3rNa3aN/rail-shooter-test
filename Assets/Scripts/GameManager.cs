@@ -7,7 +7,6 @@ public class GameManager : MonoBehaviour
     public List<Transform> nodes;
     public Transform currentNode;
     public int currentNodeNumber;
-    public float distanceFromTarget;
     public static GameManager Main { get; private set; }
 
     private void Awake()
@@ -36,6 +35,7 @@ public class GameManager : MonoBehaviour
 
     public void NextNode()
     {
+        //Debug.Log("This is a test.");
         currentNodeNumber++;
         if(currentNodeNumber != nodes.Count)        //When there is no node after the last one.
         {
@@ -43,6 +43,7 @@ public class GameManager : MonoBehaviour
             player.SetPlayerTarget(currentNode);
 
             if (currentNode.GetComponent<Node>().nodeEventList[0].eventType == Util.EventType.stop) player.willStop = true;
+            if (currentNode.GetComponent<Node>().nodeEventList[0].eventType == Util.EventType.jump) player.willJump = true;
         }
     }
 

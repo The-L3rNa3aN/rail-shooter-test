@@ -7,12 +7,16 @@ public class Player : MonoBehaviour
 {
     public Transform cameraContainer;
     public float pVelocity = 5f;
-    public bool isWalking = true; // <--- Not being used anywhere anymore. Should I remove it?
     public bool isHoldingFire = false;
     public bool willStop = false;
+    public bool willJump = false;
+    public bool isJumping = false;
+
     private CharacterController controller;
     private Vector3 targetVector;
-    public bool test = false;
+
+    [Header("DEBUG ONLY")]
+    public bool isWalking = true;
 
     private void Start()
     {
@@ -23,14 +27,17 @@ public class Player : MonoBehaviour
     {
         //if (isWalking) controller.Move(Time.deltaTime * pVelocity * targetVector);
 
-        float distFromNode = Vector3.Distance(transform.position, GameManager.Main.currentNode.position);
-        float currSpeed = pVelocity;
-        if (willStop && distFromNode < 2f)
+        if (!isJumping)
         {
-            currSpeed = pVelocity * (distFromNode / 2f);
-        }
+            float distFromNode = Vector3.Distance(transform.position, GameManager.Main.currentNode.position);
+            float currSpeed = pVelocity;
+            if (willStop && distFromNode < 2f)
+            {
+                currSpeed = pVelocity * (distFromNode / 2f);
+            }
 
-        if(isWalking) controller.Move(Time.deltaTime * currSpeed * targetVector);
+            if (isWalking) controller.Move(Time.deltaTime * currSpeed * targetVector);
+        }
     }
 
     public void SetPlayerTarget(Transform _target) => targetVector = (_target.position - transform.position).normalized;
@@ -59,9 +66,12 @@ public class Player : MonoBehaviour
                     break;
 
                 case Util.EventType.walk:
-                    willStop = false;
                     pVelocity = action.param_f;
-                    GameManager.Main.NextNode();
+                    if(willStop)
+                    {
+                        willStop = false;
+                        GameManager.Main.NextNode();
+                    }
                     break;
 
                 case Util.EventType.stop:
@@ -75,12 +85,28 @@ public class Player : MonoBehaviour
                 case Util.EventType.open:
                     isHoldingFire = false;
                     break;
+
+                case Util.EventType.jump:
+                    Vector3 a = transform.position;
+                    Vector3 b = GameManager.Main.currentNode.position;
+                    Vector3 cp = (a + b) / 2 + Vector3.up * action.param_f;
+                    float time = 0f;
+                    isJumping = true;
+
+                    while (time < action.duration)
+                    {
+                        time += Time.deltaTime;
+                        float t = time / action.duration;
+                        Vector3 p = Util.QuadraticBezierPoint(t, a, cp, b);
+                        controller.Move(p - transform.position);
+                        yield return null;
+                    }
+                    transform.position = b;
+                    isJumping = false;
+                    willJump = false;
+                    break;
             }
             yield return new WaitForSeconds(action.duration);
         }
     }
-
-    ///OTHER METHODS: -
-    ///1. Update() -> works like a charm but can be performance intensive.
-    ///2. DoTween
 }
