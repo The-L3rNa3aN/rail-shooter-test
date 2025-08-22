@@ -42,8 +42,16 @@ public class GameManager : MonoBehaviour
             currentNode = nodes[currentNodeNumber];
             player.SetPlayerTarget(currentNode);
 
-            if (currentNode.GetComponent<Node>().nodeEventList[0].eventType == Util.EventType.stop) player.willStop = true;
-            if (currentNode.GetComponent<Node>().nodeEventList[0].eventType == Util.EventType.jump) player.willJump = true;
+            switch(currentNode.GetComponent<Node>().nodeEventList[0].eventType)
+            {
+                case Util.EventType.stop:
+                    player.willStop = true;
+                    break;
+
+                case Util.EventType.jump:
+                    player.willJump = true;
+                    break;
+            }
         }
     }
 

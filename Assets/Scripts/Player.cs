@@ -67,7 +67,7 @@ public class Player : MonoBehaviour
 
                 case Util.EventType.walk:
                     pVelocity = action.param_f;
-                    if(willStop)
+                    if (willStop)
                     {
                         willStop = false;
                         GameManager.Main.NextNode();
@@ -87,6 +87,7 @@ public class Player : MonoBehaviour
                     break;
 
                 case Util.EventType.jump:
+                    GameManager.Main.NextNode();
                     Vector3 a = transform.position;
                     Vector3 b = GameManager.Main.currentNode.position;
                     Vector3 cp = (a + b) / 2 + Vector3.up * action.param_f;
