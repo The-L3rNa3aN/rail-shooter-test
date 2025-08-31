@@ -2068,7 +2068,6 @@ MonoBehaviour:
   - {fileID: 2069331997}
   currentNode: {fileID: 0}
   currentNodeNumber: 0
-  distanceFromTarget: 0
 --- !u!4 &1038466552
 Transform:
   m_ObjectHideFlags: 0
@@ -2408,6 +2407,8 @@ MonoBehaviour:
   pVelocity: 5
   isHoldingFire: 0
   willStop: 0
+  willJump: 0
+  isJumping: 0
   isWalking: 1
 --- !u!1001 &1944420888
 PrefabInstance:
