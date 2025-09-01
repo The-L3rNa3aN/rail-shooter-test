@@ -33,7 +33,8 @@ public class Player : MonoBehaviour
             float currSpeed = pVelocity;
             if (willStop && distFromNode < 2f)
             {
-                currSpeed = pVelocity * (distFromNode / 2f);
+                //currSpeed = pVelocity * (distFromNode / 2f);
+                currSpeed = distFromNode <= 0.1f ? 0 : pVelocity * (distFromNode / 2f);
             }
 
             if (isWalking) controller.Move(Time.deltaTime * currSpeed * targetVector);
