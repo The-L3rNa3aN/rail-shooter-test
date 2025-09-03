@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
     public List<Transform> nodes;
     public Transform currentNode;
     public int currentNodeNumber;
+    public float qDistNodes;
     public static GameManager Main { get; private set; }
 
     private void Awake()
@@ -31,18 +32,21 @@ public class GameManager : MonoBehaviour
         currentNode = nodes[0];
         currentNodeNumber = 0;
         player.SetPlayerTarget(currentNode);
+
+        qDistNodes = Vector3.Distance(player.transform.position, currentNode.position) / 4;
     }
 
     public void NextNode()
     {
-        //Debug.Log("This is a test.");
         currentNodeNumber++;
         if(currentNodeNumber != nodes.Count)        //When there is no node after the last one.
         {
             currentNode = nodes[currentNodeNumber];
             player.SetPlayerTarget(currentNode);
 
-            switch(currentNode.GetComponent<Node>().nodeEventList[0].eventType)
+            qDistNodes = Vector3.Distance(nodes[currentNodeNumber - 1] ? nodes[currentNodeNumber - 1].position : player.transform.position, currentNode.position) / 4;
+
+            switch (currentNode.GetComponent<Node>().nodeEventList[0].eventType)
             {
                 case Util.EventType.stop:
                     player.willStop = true;
