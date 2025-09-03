@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 [CustomPropertyDrawer(typeof(NodeListItem))]
 public class NodeListItemDrawer : PropertyDrawer
 {
-    public bool NoDurationEvents(int i) { return i == (int)Util.EventType.walk || i == (int)Util.EventType.open || i == (int)Util.EventType.stop || i == (int)Util.EventType.hold || i == (int)Util.EventType.duck || i == (int)Util.EventType.rise; }
+    public bool NoDurationEvents(int i) { return i == (int)Util.EventType.walk || i == (int)Util.EventType.open || i == (int)Util.EventType.stop || i == (int)Util.EventType.hold; }
     public bool NoParamEvents(int i) { return i == (int)Util.EventType.stop || i == (int)Util.EventType.hold || i == (int)Util.EventType.open || i == (int)Util.EventType.wait || i == (int)Util.EventType.duck || i == (int)Util.EventType.rise; }
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)

@@ -33,8 +33,8 @@ public static class Util
        open                 nil             no
        wait                 nil             yes
        jump                 float           yes
-       duck                 nil             no
-       rise                 nil             no        */
+       duck                 nil             yes
+       rise                 nil             yes       */
     public enum EventType
     {
         look,       //Makes the player look around.

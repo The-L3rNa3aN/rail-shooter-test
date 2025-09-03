@@ -1,6 +1,7 @@
-using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 [RequireComponent(typeof(CharacterController))]
 public class Player : MonoBehaviour
@@ -11,9 +12,11 @@ public class Player : MonoBehaviour
     public bool willStop = false;
     public bool willJump = false;
     public bool isJumping = false;
+    public bool crouchTest = false;
 
     private CharacterController controller;
     private Vector3 targetVector;
+    private Vector3 targetScale;
 
     [Header("DEBUG ONLY")]
     public bool isWalking = true;
@@ -29,20 +32,36 @@ public class Player : MonoBehaviour
 
         if (!isJumping)
         {
-            float distFromNode = Vector3.Distance(transform.position, GameManager.Main.currentNode.position);
+            Vector3 xz = new(GameManager.Main.currentNode.position.x, transform.position.y, GameManager.Main.currentNode.position.z);
+            float distFromNode = Vector3.Distance(transform.position, xz);
             float currSpeed = pVelocity;
-            if (willStop && distFromNode < GameManager.Main.qDistNodes /*2f*/)
-            {
-                //currSpeed = pVelocity * (distFromNode / 2f);
-                //currSpeed = distFromNode <= 0.1f ? 0 : pVelocity * (distFromNode / 2f);
-                currSpeed = distFromNode <= 0.1f ? 0 : pVelocity * (distFromNode / GameManager.Main.qDistNodes);
-            }
+            if (willStop && distFromNode < GameManager.Main.qDistNodes) currSpeed = distFromNode <= 0.1f ? 0 : pVelocity * (distFromNode / GameManager.Main.qDistNodes);
 
             if (isWalking) controller.Move(Time.deltaTime * currSpeed * targetVector);
         }
     }
 
-    public void SetPlayerTarget(Transform _target) => targetVector = (_target.position - transform.position).normalized;
+    public void SetPlayerTarget(Transform _target) => targetVector = new Vector3(_target.position.x - transform.position.x, transform.position.y, _target.position.z - transform.position.z).normalized;
+
+    public IEnumerator CrouchScale(Vector3 v, float dur)
+    {
+        float e = 0f;
+        Vector3 current = transform.localScale;
+        Vector3 yVel = Vector3.up * -10f;
+
+        while (e < dur)
+        {
+            e += Time.deltaTime;
+            float t = Mathf.Clamp01(e / dur);
+            float t2 = Mathf.SmoothStep(0f, 1f, t);
+            transform.localScale = Vector3.Lerp(current, v, t2);
+
+            controller.Move(Time.deltaTime * yVel);             //Applying a downward force to prevent the player from floating after crouching.
+            yield return null;
+        }
+
+        transform.localScale = v;
+    }
 
     public IEnumerator ParseNodeActions(List<NodeListItem> actions)
     {
@@ -109,7 +128,18 @@ public class Player : MonoBehaviour
                     isJumping = false;
                     willJump = false;
                     break;
+
+                case Util.EventType.duck:
+                    targetScale = new(1f, 0.65f, 1f);
+                    crouchTest = true;
+                    break;
+
+                case Util.EventType.rise:
+                    targetScale = Vector3.one;
+                    crouchTest = false;
+                    break;
             }
+            if(action.eventType == Util.EventType.duck || action.eventType == Util.EventType.rise) yield return StartCoroutine(CrouchScale(targetScale, action.duration));
             yield return new WaitForSeconds(action.duration);
         }
     }
