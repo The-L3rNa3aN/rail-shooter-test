@@ -129,18 +129,15 @@ public class Player : MonoBehaviour
                     willJump = false;
                     break;
 
-                case Util.EventType.duck:
-                    targetScale = new(1f, 0.65f, 1f);
-                    crouchTest = true;
-                    break;
-
-                case Util.EventType.rise:
-                    targetScale = Vector3.one;
-                    crouchTest = false;
+                case Util.EventType.sqat:
+                    targetScale = new(1f, action.param_f, 1f);
+                    crouchTest = transform.localScale.y > action.param_f;
                     break;
             }
-            if(action.eventType == Util.EventType.duck || action.eventType == Util.EventType.rise) yield return StartCoroutine(CrouchScale(targetScale, action.duration));
-            yield return new WaitForSeconds(action.duration);
+            if(action.eventType == Util.EventType.sqat)
+                yield return StartCoroutine(CrouchScale(targetScale, action.duration));
+            else
+                yield return new WaitForSeconds(action.duration);
         }
     }
 }

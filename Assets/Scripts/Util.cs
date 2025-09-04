@@ -33,8 +33,7 @@ public static class Util
        open                 nil             no
        wait                 nil             yes
        jump                 float           yes
-       duck                 nil             yes
-       rise                 nil             yes       */
+       sqat                 float           yes       */
     public enum EventType
     {
         look,       //Makes the player look around.
@@ -44,7 +43,6 @@ public static class Util
         open,       //Allows the player to resume fire.
         wait,       //Delay's operations for a specified duration.
         jump,       //Jumps with a specified height and duration.
-        duck,       //Make's the player crouch. WILL NOT AFFECT PLAYER SPEED.
-        rise        //Make's the player stand up.
+        sqat,       //Changes the player's Y-orientation based on the assigned value. WILL NOT AFFECT PLAYER SPEED.
     }
 }

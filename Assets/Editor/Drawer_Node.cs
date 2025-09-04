@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 public class NodeListItemDrawer : PropertyDrawer
 {
     public bool NoDurationEvents(int i) { return i == (int)Util.EventType.walk || i == (int)Util.EventType.open || i == (int)Util.EventType.stop || i == (int)Util.EventType.hold; }
-    public bool NoParamEvents(int i) { return i == (int)Util.EventType.stop || i == (int)Util.EventType.hold || i == (int)Util.EventType.open || i == (int)Util.EventType.wait || i == (int)Util.EventType.duck || i == (int)Util.EventType.rise; }
+    public bool NoParamEvents(int i) { return i == (int)Util.EventType.stop || i == (int)Util.EventType.hold || i == (int)Util.EventType.open || i == (int)Util.EventType.wait; }
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
@@ -55,6 +55,10 @@ public class NodeListItemDrawer : PropertyDrawer
 
                 case (int)Util.EventType.jump:
                     EditorGUI.PropertyField(lineRect, param_f, new GUIContent("Jump Height"));
+                    break;
+
+                case (int)Util.EventType.sqat:
+                    EditorGUI.PropertyField(lineRect, param_f, new GUIContent("Y Scale"));
                     break;
 
                 //case (int)Util.EventType.hold:

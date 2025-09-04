@@ -1377,11 +1377,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8245787454004805341, guid: f119c5ec871fada4684e3a4b170392a2, type: 3}
       propertyPath: nodeEventList.Array.data[0].param_f
-      value: 3
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 8245787454004805341, guid: f119c5ec871fada4684e3a4b170392a2, type: 3}
       propertyPath: nodeEventList.Array.data[1].param_f
-      value: 2.5
+      value: 0.65
       objectReference: {fileID: 0}
     - target: {fileID: 8245787454004805341, guid: f119c5ec871fada4684e3a4b170392a2, type: 3}
       propertyPath: nodeEventList.Array.data[5].param_f
@@ -1397,11 +1397,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8245787454004805341, guid: f119c5ec871fada4684e3a4b170392a2, type: 3}
       propertyPath: nodeEventList.Array.data[0].duration
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8245787454004805341, guid: f119c5ec871fada4684e3a4b170392a2, type: 3}
       propertyPath: nodeEventList.Array.data[1].duration
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 8245787454004805341, guid: f119c5ec871fada4684e3a4b170392a2, type: 3}
       propertyPath: nodeEventList.Array.data[2].duration
@@ -1425,11 +1425,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8245787454004805341, guid: f119c5ec871fada4684e3a4b170392a2, type: 3}
       propertyPath: nodeEventList.Array.data[0].eventType
-      value: 7
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8245787454004805341, guid: f119c5ec871fada4684e3a4b170392a2, type: 3}
       propertyPath: nodeEventList.Array.data[1].eventType
-      value: 1
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 8245787454004805341, guid: f119c5ec871fada4684e3a4b170392a2, type: 3}
       propertyPath: nodeEventList.Array.data[2].eventType
@@ -1623,23 +1623,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8245787454004805341, guid: f119c5ec871fada4684e3a4b170392a2, type: 3}
       propertyPath: nodeEventList.Array.data[1].param_f
-      value: 5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8245787454004805341, guid: f119c5ec871fada4684e3a4b170392a2, type: 3}
       propertyPath: nodeEventList.Array.data[0].duration
-      value: 0.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 8245787454004805341, guid: f119c5ec871fada4684e3a4b170392a2, type: 3}
-      propertyPath: nodeEventList.Array.data[1].duration
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8245787454004805341, guid: f119c5ec871fada4684e3a4b170392a2, type: 3}
+      propertyPath: nodeEventList.Array.data[1].duration
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8245787454004805341, guid: f119c5ec871fada4684e3a4b170392a2, type: 3}
       propertyPath: nodeEventList.Array.data[0].eventType
-      value: 8
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8245787454004805341, guid: f119c5ec871fada4684e3a4b170392a2, type: 3}
       propertyPath: nodeEventList.Array.data[1].eventType
-      value: 1
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 9146990598396012762, guid: f119c5ec871fada4684e3a4b170392a2, type: 3}
       propertyPath: m_Name
@@ -2391,7 +2391,6 @@ MonoBehaviour:
   willJump: 0
   isJumping: 0
   crouchTest: 0
-  targetScale: {x: 0, y: 0, z: 0}
   isWalking: 1
 --- !u!1 &2012425470
 GameObject:
