@@ -29,11 +29,19 @@ public class GameManager : MonoBehaviour
         Camera.main.transform.localPosition = Vector3.zero;
         Camera.main.transform.rotation = Camera.main.transform.parent.rotation;
 
-        currentNode = nodes[0];
         currentNodeNumber = 0;
-        player.SetPlayerTarget(currentNode);
+        currentNode = nodes[currentNodeNumber];
 
-        qDistNodes = Vector3.Distance(player.transform.position, currentNode.position) / 4;
+        //TEMPORARY. For the player starting at Node#000 on the start of the scene.
+        player.transform.position = currentNode.position;
+        List<NodeListItem> l = currentNode.GetComponent<Node>().nodeEventList;
+        StartCoroutine(player.ParseNodeActions(l));
+        if (l[0].eventType == Util.EventType.stop) player.isWalking = false;
+        //NextNode();
+
+        //player.SetPlayerTarget(currentNode);
+
+        //qDistNodes = Vector3.Distance(player.transform.position, currentNode.position) / 4;
     }
 
     public void NextNode()

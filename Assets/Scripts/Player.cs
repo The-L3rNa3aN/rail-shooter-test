@@ -88,6 +88,7 @@ public class Player : MonoBehaviour
 
                 case Util.EventType.walk:
                     pVelocity = action.param_f;
+                    if(!isWalking) isWalking = true;
                     if (willStop || willJump)
                     {
                         willStop = false;
