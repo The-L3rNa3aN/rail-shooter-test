@@ -3,12 +3,13 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public Player player;
+    public Player prefab_player;
     public List<Transform> nodes;
     public Transform currentNode;
     public int currentNodeNumber;
     public float qDistNodes;
     public static GameManager Main { get; private set; }
+    [HideInInspector] public Player player;
 
     private void Awake()
     {
@@ -25,6 +26,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        player = Instantiate(prefab_player);
+
         Camera.main.transform.parent = player.cameraContainer;
         Camera.main.transform.localPosition = Vector3.zero;
         Camera.main.transform.rotation = Camera.main.transform.parent.rotation;
