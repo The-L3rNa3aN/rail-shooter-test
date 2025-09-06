@@ -1,6 +1,9 @@
 using UnityEditor;
 using UnityEngine;
 using System.Text.RegularExpressions;
+using UnityEditor.SearchService;
+using UnityEngine.SceneManagement;
+using Unity.VisualScripting;
 
 [CustomPropertyDrawer(typeof(NodeListItem))]
 public class NodeListItemDrawer : PropertyDrawer
@@ -16,7 +19,6 @@ public class NodeListItemDrawer : PropertyDrawer
         SerializedProperty eventType = property.FindPropertyRelative("eventType");
         SerializedProperty param_v = property.FindPropertyRelative("param_v");
         SerializedProperty param_f = property.FindPropertyRelative("param_f");
-        //SerializedProperty param_b = property.FindPropertyRelative("param_b");
         SerializedProperty duration = property.FindPropertyRelative("duration");
 
         // Get the index of the list element for serial number
@@ -47,6 +49,8 @@ public class NodeListItemDrawer : PropertyDrawer
             {
                 case (int)Util.EventType.look:
                     EditorGUI.PropertyField(lineRect, param_v, new GUIContent("Look At"));
+                    lineRect.y += lineHeight;
+                    if (GUI.Button(lineRect, "Align cam to node path")) AlignCameraToNodePath(property);
                     break;
 
                 case (int)Util.EventType.walk:
@@ -66,7 +70,7 @@ public class NodeListItemDrawer : PropertyDrawer
                 //    break;
             }
 
-            if(!NoParamEvents(eventType.enumValueIndex)) lineRect.y += lineHeight;
+            if(!NoParamEvents(eventType.enumValueIndex) /*|| eventType.enumValueIndex == (int)Util.EventType.look*/) lineRect.y += lineHeight;
             if(!NoDurationEvents(eventType.enumValueIndex)) EditorGUI.PropertyField(lineRect, duration, new GUIContent("Duration"));
             EditorGUI.indentLevel--;
         }
@@ -86,7 +90,8 @@ public class NodeListItemDrawer : PropertyDrawer
             {
                 height += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing; // For the "param_v" / "param_f" / "isIndefinite"
             }
-            if(!NoDurationEvents(eventType.enumValueIndex)) height += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing; // For the "duration" field.
+            if(eventType.enumValueIndex == (int)Util.EventType.look) height += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
+            if (!NoDurationEvents(eventType.enumValueIndex)) height += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing; // For the "duration" field.
         }
 
         return height;
@@ -102,5 +107,23 @@ public class NodeListItemDrawer : PropertyDrawer
             return index;
         }
         return -1; // Fallback if index cannot be determined
+    }
+
+    private void AlignCameraToNodePath(SerializedProperty p)
+    {
+        SerializedObject so = p.serializedObject;
+        Transform t = so.targetObject.GetComponent<Transform>();
+        GameObject gobj = GameObject.Find("GameManager");
+        GameManager g = gobj.GetComponent<GameManager>();
+        int n = g.nodes.IndexOf(t);
+
+        if (n < g.nodes.Count - 1)
+        {
+            Debug.Log("YES");
+        }
+        else
+        {
+            Debug.Log("There are no nodes after this one. Operation aborted.");
+        }
     }
 }
