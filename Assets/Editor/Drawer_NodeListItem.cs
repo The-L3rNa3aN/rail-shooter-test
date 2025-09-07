@@ -119,11 +119,13 @@ public class NodeListItemDrawer : PropertyDrawer
 
         if (n < g.nodes.Count - 1)
         {
-            Debug.Log("YES");
+            Transform t1 = g.nodes[n + 1];
+            Vector3 dir = Vector3.Normalize(t1.position - t.position);
+            Camera.main.transform.rotation  = Quaternion.LookRotation(dir);
         }
         else
         {
-            Debug.Log("There are no nodes after this one. Operation aborted.");
+            Debug.Log("There are no nodes after this one to calculate the direciton. Operation aborted.");
         }
     }
 }
