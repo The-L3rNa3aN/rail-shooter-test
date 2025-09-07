@@ -30,5 +30,20 @@ public class DataListEditor : Editor
 
             }
         }
+
+        GameManager g = GameObject.Find("GameManager").GetComponent<GameManager>();
+        int no = g.nodes.IndexOf(node.transform);
+
+        // Align camera along node path.
+        if(no < g.nodes.Count - 1)
+        {
+            Transform t = g.nodes[no + 1];
+            Vector3 dir = Vector3.Normalize(t.position - node.transform.position);
+            Camera.main.transform.rotation = Quaternion.LookRotation(dir);
+        }
+        else
+        {
+            Debug.Log("Camera can't be aligned due to the absence of further nodes.");
+        }
     }
 }

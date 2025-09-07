@@ -1,9 +1,6 @@
 using UnityEditor;
 using UnityEngine;
 using System.Text.RegularExpressions;
-using UnityEditor.SearchService;
-using UnityEngine.SceneManagement;
-using Unity.VisualScripting;
 
 [CustomPropertyDrawer(typeof(NodeListItem))]
 public class NodeListItemDrawer : PropertyDrawer
@@ -49,8 +46,6 @@ public class NodeListItemDrawer : PropertyDrawer
             {
                 case (int)Util.EventType.look:
                     EditorGUI.PropertyField(lineRect, param_v, new GUIContent("Look At"));
-                    lineRect.y += lineHeight;
-                    if (GUI.Button(lineRect, "Align cam to node path")) AlignCameraToNodePath(property);
                     break;
 
                 case (int)Util.EventType.walk:
@@ -90,7 +85,6 @@ public class NodeListItemDrawer : PropertyDrawer
             {
                 height += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing; // For the "param_v" / "param_f" / "isIndefinite"
             }
-            if(eventType.enumValueIndex == (int)Util.EventType.look) height += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
             if (!NoDurationEvents(eventType.enumValueIndex)) height += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing; // For the "duration" field.
         }
 
@@ -107,25 +101,5 @@ public class NodeListItemDrawer : PropertyDrawer
             return index;
         }
         return -1; // Fallback if index cannot be determined
-    }
-
-    private void AlignCameraToNodePath(SerializedProperty p)
-    {
-        SerializedObject so = p.serializedObject;
-        Transform t = so.targetObject.GetComponent<Transform>();
-        GameObject gobj = GameObject.Find("GameManager");
-        GameManager g = gobj.GetComponent<GameManager>();
-        int n = g.nodes.IndexOf(t);
-
-        if (n < g.nodes.Count - 1)
-        {
-            Transform t1 = g.nodes[n + 1];
-            Vector3 dir = Vector3.Normalize(t1.position - t.position);
-            Camera.main.transform.rotation  = Quaternion.LookRotation(dir);
-        }
-        else
-        {
-            Debug.Log("There are no nodes after this one to calculate the direciton. Operation aborted.");
-        }
     }
 }
