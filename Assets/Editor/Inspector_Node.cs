@@ -1,3 +1,4 @@
+using PlasticPipe.PlasticProtocol.Messages;
 using UnityEditor;
 using UnityEngine;
 
@@ -14,22 +15,19 @@ public class DataListEditor : Editor
 
         if(GUILayout.Button("Reposition camera to node")) RepositionCameraToNode();
 
+        if(GUILayout.Button("Set node height from ground"))
+        {
+            Node node = (Node)target;
+            node.transform.position = Util.PosOffsetFromGround(node.transform.position, Util.NodeGroundDist);
+        }
+
         serializedObject.ApplyModifiedProperties();
     }
 
     private void RepositionCameraToNode()
     {
         Node node = (Node)target;
-
-        if(Physics.Raycast(node.transform.position, Vector3.down, out RaycastHit hit))
-        {
-            if(hit.collider.gameObject.layer == 6)
-            {
-                Vector3 n = hit.point + hit.normal * Util.CamGroundDist;
-                Camera.main.transform.position = n;
-
-            }
-        }
+        Camera.main.transform.position = Util.PosOffsetFromGround(node.transform.position, Util.CamGroundDist);
 
         GameManager g = GameObject.Find("GameManager").GetComponent<GameManager>();
         int no = g.nodes.IndexOf(node.transform);

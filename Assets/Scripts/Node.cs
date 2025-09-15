@@ -19,7 +19,6 @@ public class Node : MonoBehaviour
     {
         Player player = other.GetComponent<Player>();
         if (player) StartCoroutine(player.ParseNodeActions(nodeEventList));
-
-        if (!player.willStop && !player.willJump) GameManager.Main.NextNode();
+        if (!GameManager.Main.justStarted && !player.willStop && !player.willJump) GameManager.Main.NextNode();
     }
 }

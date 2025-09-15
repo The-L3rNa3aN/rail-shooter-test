@@ -29,7 +29,8 @@ public class CustomHierarchyMenu
         {
             Transform lastChild = nodeContainer.GetChild(nodeContainer.childCount - 1);
             Vector3 dir = (instance.transform.position - lastChild.transform.position).normalized;
-            instance.transform.position = new Vector3(lastChild.position.x + dir.x + 1f, 0f, lastChild.position.z + dir.z + 1f);
+            Vector3 s = lastChild.position + dir + Vector3.one;
+            instance.transform.position = new Vector3(s.x, Util.PosOffsetFromGround(s, Util.NodeGroundDist).y, s.z);
         }
         else
             instance.transform.position = Vector3.zero;

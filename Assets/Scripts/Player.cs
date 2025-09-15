@@ -41,7 +41,8 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void SetPlayerTarget(Transform _target) => targetVector = new Vector3(_target.position.x - transform.position.x, transform.position.y, _target.position.z - transform.position.z).normalized;
+    //public void SetPlayerTarget(Transform _target) => targetVector = new Vector3(_target.position.x - transform.position.x, transform.position.y, _target.position.z - transform.position.z).normalized;
+    public void SetPlayerTarget(Transform _target) => targetVector = new Vector3(_target.position.x - transform.position.x, _target.position.y - transform.position.y, _target.position.z - transform.position.z).normalized;
 
     public IEnumerator CrouchScale(Vector3 v, float dur)
     {
@@ -88,7 +89,6 @@ public class Player : MonoBehaviour
 
                 case Util.EventType.walk:
                     pVelocity = action.param_f;
-                    if(!isWalking) isWalking = true;
                     if (willStop || willJump)
                     {
                         willStop = false;
@@ -99,6 +99,7 @@ public class Player : MonoBehaviour
 
                 case Util.EventType.stop:
                     //isWalking = false;
+                    //willStop = isWalking ? true : false;
                     break;
 
                 case Util.EventType.hold:

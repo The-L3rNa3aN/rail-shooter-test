@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     public float qDistNodes;
     public static GameManager Main { get; private set; }
     [HideInInspector] public Player player;
+    [HideInInspector] public bool justStarted = true;
 
     private void Awake()
     {
@@ -38,10 +39,12 @@ public class GameManager : MonoBehaviour
         //TEMPORARY. For the player starting at Node#000 on the start of the scene.
         player.transform.position = currentNode.position;
         List<NodeListItem> l = currentNode.GetComponent<Node>().nodeEventList;
-        StartCoroutine(player.ParseNodeActions(l));
-        if (l[0].eventType == Util.EventType.stop) player.isWalking = false;
-        //NextNode();
-
+        if (l[0].eventType == Util.EventType.stop)
+        {
+            player.pVelocity = 0f;
+            player.willStop = true;
+        }
+        justStarted = false;
         //player.SetPlayerTarget(currentNode);
 
         //qDistNodes = Vector3.Distance(player.transform.position, currentNode.position) / 4;

@@ -1,8 +1,10 @@
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public static class Util
 {
     public static float CamGroundDist = 1.77f;
+    public static float NodeGroundDist = 1.03f;
 
     public static string ReturnNodeSuffix(int number)
     {
@@ -22,6 +24,17 @@ public static class Util
 
         Vector3 point = (uu * p0) + (2 * u * t * p1) + (tt * p2);
         return point;
+    }
+
+    public static Vector3 PosOffsetFromGround(Vector3 v, float offset)
+    {
+        if (Physics.Raycast(v, Vector3.down, out RaycastHit hit))
+        {
+            Vector3 n = hit.point + hit.normal * offset;
+            return n;
+        }
+
+        return Vector3.zero;
     }
 
     /* EVENT NAME           PARAMS          DURATION
