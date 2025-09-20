@@ -6,7 +6,7 @@ public class GameManager : MonoBehaviour
     public Player prefab_player;
     public List<Transform> nodes;
     public Transform currentNode;
-    public int currentNodeNumber;
+    [Tooltip("Change it from '0' if you want the player to start at a specific node.")] public int currentNodeNumber;
     public float qDistNodes;
     public static GameManager Main { get; private set; }
     [HideInInspector] public Player player;
@@ -33,7 +33,7 @@ public class GameManager : MonoBehaviour
         Camera.main.transform.localPosition = Vector3.zero;
         Camera.main.transform.rotation = Camera.main.transform.parent.rotation;
 
-        currentNodeNumber = 0;
+        //currentNodeNumber = 0;
         currentNode = nodes[currentNodeNumber];
 
         //TEMPORARY. For the player starting at Node#000 on the start of the scene.
