@@ -11649,7 +11649,7 @@ MonoBehaviour:
   - {fileID: 294105556}
   - {fileID: 68609458}
   currentNode: {fileID: 0}
-  currentNodeNumber: 8
+  currentNodeNumber: 0
   qDistNodes: 0
   player: {fileID: 0}
   justStarted: 1

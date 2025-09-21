@@ -1605,7 +1605,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8245787454004805341, guid: f119c5ec871fada4684e3a4b170392a2, type: 3}
       propertyPath: nodeEventList.Array.data[1].param_f
-      value: 1
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8245787454004805341, guid: f119c5ec871fada4684e3a4b170392a2, type: 3}
       propertyPath: nodeEventList.Array.data[0].duration
@@ -1613,7 +1613,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8245787454004805341, guid: f119c5ec871fada4684e3a4b170392a2, type: 3}
       propertyPath: nodeEventList.Array.data[1].duration
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8245787454004805341, guid: f119c5ec871fada4684e3a4b170392a2, type: 3}
       propertyPath: nodeEventList.Array.data[0].eventType
@@ -1621,7 +1621,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8245787454004805341, guid: f119c5ec871fada4684e3a4b170392a2, type: 3}
       propertyPath: nodeEventList.Array.data[1].eventType
-      value: 7
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9146990598396012762, guid: f119c5ec871fada4684e3a4b170392a2, type: 3}
       propertyPath: m_Name
