@@ -17,11 +17,23 @@ public class Node : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(GameManager.Main.currentNode == transform)
+        if (GameManager.Main)
         {
-            Player player = other.GetComponent<Player>();
-            if (player) StartCoroutine(player.ParseNodeActions(nodeEventList));
-            if (!GameManager.Main.justStarted && !player.willStop && !player.willJump) GameManager.Main.NextNode();
+            if (GameManager.Main.currentNode == transform)
+            {
+                Player player = other.GetComponent<Player>();
+                if (player) StartCoroutine(player.ParseNodeActions(nodeEventList));
+                if (!GameManager.Main.justStarted && !player.willStop && !player.willJump) GameManager.Main.NextNode();
+            }
+        }
+        else
+        {
+            if(demo4GM.Main.currentNode == transform)
+            {
+                demoplayer player = other.GetComponent<demoplayer>();
+                if (player) StartCoroutine(player.ParseNodeActions(nodeEventList));
+                if (!demo4GM.Main.justStarted && !player.willStop && !player.willJump) demo4GM.Main.NextNode();
+            }
         }
     }
 }
