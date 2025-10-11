@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
     public Transform currentNode;
     [Tooltip("Change it from '0' if you want the player to start at a specific node.")] public int currentNodeNumber;
     public float qDistNodes;
+    public UIHandler uih;
     public static GameManager Main { get; private set; }
     [HideInInspector] public Player player;
     [HideInInspector] public bool justStarted = true;
@@ -33,8 +34,9 @@ public class GameManager : MonoBehaviour
         Camera.main.transform.localPosition = Vector3.zero;
         Camera.main.transform.rotation = Camera.main.transform.parent.rotation;
 
+        SetNodeAndPlayerPosition();
         //currentNodeNumber = 0;
-        currentNode = nodes[currentNodeNumber];
+        /* currentNode = nodes[currentNodeNumber];
 
         //TEMPORARY. For the player starting at Node#000 on the start of the scene.
         player.transform.position = currentNode.position;
@@ -44,7 +46,7 @@ public class GameManager : MonoBehaviour
             player.pVelocity = 0f;
             player.willStop = true;
         }
-        justStarted = false;
+        justStarted = false; */
         //player.SetPlayerTarget(currentNode);
 
         //qDistNodes = Vector3.Distance(player.transform.position, currentNode.position) / 4;
@@ -71,6 +73,26 @@ public class GameManager : MonoBehaviour
                     break;
             }
         }
+    }
+
+    public void SetNodeAndPlayerPosition()
+    {
+        currentNode = nodes[currentNodeNumber];
+
+        player.transform.position = currentNode.position;
+        List<NodeListItem> l = currentNode.GetComponent<Node>().nodeEventList;
+        if (l[0].eventType == Util.EventType.stop)
+        {
+            player.pVelocity = 0f;
+            player.willStop = true;
+        }
+        justStarted = false;
+    }
+
+    public void RestartLevel()
+    {
+        currentNodeNumber = 0;
+        SetNodeAndPlayerPosition();
     }
 
     // EDITOR
