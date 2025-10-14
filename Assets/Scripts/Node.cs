@@ -17,14 +17,14 @@ public class Node : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(GameManager.Main.currentNode == transform)
+        if (GameManager.Main.currentNode == GameManager.Main.nodes[^1])
+            StartCoroutine(GameManager.Main.uih.FadeInEndScreen(0.25f));
+
+        if (GameManager.Main.currentNode == transform)
         {
             Player player = other.GetComponent<Player>();
             if (player) StartCoroutine(player.ParseNodeActions(nodeEventList));
             if (!GameManager.Main.justStarted && !player.willStop && !player.willJump) GameManager.Main.NextNode();
-
-            if(GameManager.Main.currentNode == GameManager.Main.nodes[^1])
-                StartCoroutine(GameManager.Main.uih.FadeInEndScreen(0.25f));
         }
     }
 }

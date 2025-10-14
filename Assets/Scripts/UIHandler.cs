@@ -1,10 +1,16 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UIHandler : MonoBehaviour
 {
+    [Header("Main Menu")]
+    public GameObject mainMenuContent;
+    public GameObject aboutContent;
+
+    [Header("End Screen")]
     public Image endScreenBG;
     public TMP_Text title;
     public Button btn_restart;
@@ -16,14 +22,39 @@ public class UIHandler : MonoBehaviour
     private Image img_restart;
     private Image img_menu;
 
+    [Header("Pause Screen")]
+    public GameObject pauseScreenParent;
+
     private void Start()
     {
+        if (SceneManager.GetActiveScene().buildIndex != 0) DemoInitialize();
+    }
+
+    public void DemoInitialize()
+    {
+        //Debug.Log("This is a test.");
         txt_restart = btn_restart.transform.GetChild(0).GetComponent<TMP_Text>();
         txt_menu = btn_menu.transform.GetChild(0).GetComponent<TMP_Text>();
 
         img_restart = btn_restart.GetComponent<Image>();
         img_menu = btn_menu.GetComponent<Image>();
     }
+
+    #region Main Menu Callbacks
+
+    public void LoadGameScenes(int index) => SceneManager.LoadScene(index);
+
+    public void ToggleMainMenuAndAbout(bool b)
+    {
+        mainMenuContent.SetActive(!b);
+        aboutContent.SetActive(b);
+    }
+
+    public void QuitGame() => Application.Quit();
+
+    #endregion
+
+    public void Button_Resume() => GameManager.Main.GamePause(false);
 
     public void Button_Restart()
     {

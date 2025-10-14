@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
 
 public class GameManager : MonoBehaviour
 {
@@ -22,7 +25,7 @@ public class GameManager : MonoBehaviour
         else
         {
             Main = this;
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
         }
     }
 
@@ -35,21 +38,9 @@ public class GameManager : MonoBehaviour
         Camera.main.transform.rotation = Camera.main.transform.parent.rotation;
 
         SetNodeAndPlayerPosition();
-        //currentNodeNumber = 0;
-        /* currentNode = nodes[currentNodeNumber];
 
-        //TEMPORARY. For the player starting at Node#000 on the start of the scene.
-        player.transform.position = currentNode.position;
-        List<NodeListItem> l = currentNode.GetComponent<Node>().nodeEventList;
-        if (l[0].eventType == Util.EventType.stop)
-        {
-            player.pVelocity = 0f;
-            player.willStop = true;
-        }
-        justStarted = false; */
-        //player.SetPlayerTarget(currentNode);
-
-        //qDistNodes = Vector3.Distance(player.transform.position, currentNode.position) / 4;
+        //Pause menu.
+        Inputs.key_esc += () => GamePause(Time.timeScale != 0f);
     }
 
     public void NextNode()
@@ -91,8 +82,28 @@ public class GameManager : MonoBehaviour
 
     public void RestartLevel()
     {
-        currentNodeNumber = 0;
-        SetNodeAndPlayerPosition();
+        //currentNodeNumber = 1;
+        //currentNode = nodes[currentNodeNumber];
+
+        //player.transform.position = nodes[1].position;
+        //Debug.Log($"player position: {player.transform.position}, node 0 position: {nodes[0].position}");
+        //List<NodeListItem> l = currentNode.GetComponent<Node>().nodeEventList;
+        //if (l[0].eventType == Util.EventType.stop)
+        //{
+        //    player.pVelocity = 0f;
+        //    player.willStop = true;
+        //}
+        //justStarted = false;
+
+        //Fuck all of it. This is the easiest one.
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void GamePause(bool p)
+    {
+        Time.timeScale = p ? 0f : 1f;
+        uih.pauseScreenParent.SetActive(p);
     }
 
     // EDITOR

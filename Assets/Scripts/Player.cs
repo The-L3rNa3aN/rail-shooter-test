@@ -15,7 +15,7 @@ public class Player : MonoBehaviour
     public bool crouchTest = false;
 
     private CharacterController controller;
-    private Vector3 targetVector;
+    [SerializeField] private Vector3 targetVector;
     private Vector3 targetScale;
 
     [Header("DEBUG ONLY")]
