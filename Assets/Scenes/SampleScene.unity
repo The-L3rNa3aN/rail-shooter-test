@@ -263,7 +263,7 @@ GameObject:
   - component: {fileID: 101668902}
   - component: {fileID: 101668906}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: UIHandler
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2479,6 +2479,7 @@ MonoBehaviour:
   uih: {fileID: 101668906}
   player: {fileID: 0}
   justStarted: 1
+  isInitialized: 0
 --- !u!4 &1038466552
 Transform:
   m_ObjectHideFlags: 0

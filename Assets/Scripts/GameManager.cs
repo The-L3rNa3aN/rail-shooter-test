@@ -1,8 +1,9 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UIElements;
 
 public class GameManager : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Main { get; private set; }
     [HideInInspector] public Player player;
     [HideInInspector] public bool justStarted = true;
+    public bool isInitialized = false;
 
     private void Awake()
     {
@@ -25,11 +27,22 @@ public class GameManager : MonoBehaviour
         else
         {
             Main = this;
-            //DontDestroyOnLoad(gameObject);
+            DontDestroyOnLoad(gameObject);
+            isInitialized = true;
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
+
     }
 
     private void Start()
+    {
+        //InitPlayer();
+
+        //Pause menu.
+        Inputs.key_esc += () => GamePause(Time.timeScale != 0f);
+    }
+
+    private void InitPlayer()
     {
         player = Instantiate(prefab_player);
 
@@ -38,9 +51,6 @@ public class GameManager : MonoBehaviour
         Camera.main.transform.rotation = Camera.main.transform.parent.rotation;
 
         SetNodeAndPlayerPosition();
-
-        //Pause menu.
-        Inputs.key_esc += () => GamePause(Time.timeScale != 0f);
     }
 
     public void NextNode()
@@ -97,6 +107,7 @@ public class GameManager : MonoBehaviour
 
         //Fuck all of it. This is the easiest one.
         Time.timeScale = 1f;
+        currentNodeNumber = 0;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
@@ -104,6 +115,29 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = p ? 0f : 1f;
         uih.pauseScreenParent.SetActive(p);
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        Debug.Log($"Scene loaded: {scene.name}, Load mode: {mode}");
+
+        if(nodes.All(n => n == null))
+        {
+            nodes.Clear();
+            Transform nodeContainer = GameObject.Find("NodeContainer").transform;
+            nodes.AddRange(nodeContainer.Cast<Transform>());
+        }
+
+        if (player == null) InitPlayer();
+
+        if (uih == null)
+            uih = GameObject.Find("UIHandler").GetComponent<UIHandler>();
+    }
+
+    private void OnDestroy()
+    {
+        if(Main == this)
+            SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
     // EDITOR
