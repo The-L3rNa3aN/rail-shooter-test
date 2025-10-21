@@ -1,7 +1,4 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -16,33 +13,16 @@ public class GameManager : MonoBehaviour
     public static GameManager Main { get; private set; }
     [HideInInspector] public Player player;
     [HideInInspector] public bool justStarted = true;
-    public bool isInitialized = false;
 
     private void Awake()
     {
         if (Main != null && Main != this)
-        {
             Destroy(gameObject);
-        }
         else
-        {
             Main = this;
-            DontDestroyOnLoad(gameObject);
-            isInitialized = true;
-            SceneManager.sceneLoaded += OnSceneLoaded;
-        }
-
     }
 
     private void Start()
-    {
-        //InitPlayer();
-
-        //Pause menu.
-        Inputs.key_esc += () => GamePause(Time.timeScale != 0f);
-    }
-
-    private void InitPlayer()
     {
         player = Instantiate(prefab_player);
 
@@ -51,6 +31,11 @@ public class GameManager : MonoBehaviour
         Camera.main.transform.rotation = Camera.main.transform.parent.rotation;
 
         SetNodeAndPlayerPosition();
+
+        //Pause menu.
+        Inputs.key_esc += () => GamePause(Time.timeScale != 0f);
+
+        //SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     public void NextNode()
@@ -108,7 +93,8 @@ public class GameManager : MonoBehaviour
         //Fuck all of it. This is the easiest one.
         Time.timeScale = 1f;
         currentNodeNumber = 0;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
+        //uih.sceneLoader.LoadSceneWithDelay(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void GamePause(bool p)
@@ -117,27 +103,15 @@ public class GameManager : MonoBehaviour
         uih.pauseScreenParent.SetActive(p);
     }
 
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        Debug.Log($"Scene loaded: {scene.name}, Load mode: {mode}");
-
-        if(nodes.All(n => n == null))
-        {
-            nodes.Clear();
-            Transform nodeContainer = GameObject.Find("NodeContainer").transform;
-            nodes.AddRange(nodeContainer.Cast<Transform>());
-        }
-
-        if (player == null) InitPlayer();
-
-        if (uih == null)
-            uih = GameObject.Find("UIHandler").GetComponent<UIHandler>();
-    }
+    //private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    //{
+    //    Time.timeScale = 1f;
+    //}
 
     private void OnDestroy()
     {
-        if(Main == this)
-            SceneManager.sceneLoaded -= OnSceneLoaded;
+        //SceneManager.sceneLoaded -= OnSceneLoaded;
+        Inputs.key_esc -= () => GamePause(Time.timeScale != 0f);
     }
 
     // EDITOR

@@ -25,6 +25,9 @@ public class UIHandler : MonoBehaviour
     [Header("Pause Screen")]
     public GameObject pauseScreenParent;
 
+    [Header("Scene Loader")]
+    public SceneLoader sceneLoader;
+
     private void Start()
     {
         if (SceneManager.GetActiveScene().buildIndex != 0) DemoInitialize();
@@ -32,7 +35,6 @@ public class UIHandler : MonoBehaviour
 
     public void DemoInitialize()
     {
-        //Debug.Log("This is a test.");
         txt_restart = btn_restart.transform.GetChild(0).GetComponent<TMP_Text>();
         txt_menu = btn_menu.transform.GetChild(0).GetComponent<TMP_Text>();
 
@@ -41,8 +43,6 @@ public class UIHandler : MonoBehaviour
     }
 
     #region Main Menu Callbacks
-
-    public void LoadGameScenes(int index) => SceneManager.LoadScene(index);
 
     public void ToggleMainMenuAndAbout(bool b)
     {
@@ -53,6 +53,13 @@ public class UIHandler : MonoBehaviour
     public void QuitGame() => Application.Quit();
 
     #endregion
+
+    public void LoadGameScenes(int index)
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(index, LoadSceneMode.Single);
+        //sceneLoader.LoadSceneWithDelay(index);
+    }
 
     public void Button_Resume() => GameManager.Main.GamePause(false);
 

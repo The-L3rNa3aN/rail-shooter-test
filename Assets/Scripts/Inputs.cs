@@ -10,4 +10,9 @@ public class Inputs : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
             key_esc?.Invoke();
     }
+
+    private void OnDestroy()
+    {
+        key_esc = null;
+    }
 }
