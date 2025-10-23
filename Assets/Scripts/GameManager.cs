@@ -41,12 +41,9 @@ public class GameManager : MonoBehaviour
             player.willStop = true;
         }
         justStarted = false;
-        //SetNodeAndPlayerPosition();
 
         //Pause menu.
         Inputs.key_esc += () => GamePause(Time.timeScale != 0f);
-
-        //SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     public void NextNode()
@@ -57,7 +54,8 @@ public class GameManager : MonoBehaviour
             currentNode = nodes[currentNodeNumber];
             player.SetPlayerTarget(currentNode);
 
-            qDistNodes = Vector3.Distance(nodes[currentNodeNumber - 1] ? nodes[currentNodeNumber - 1].position : player.transform.position, currentNode.position) / 4;
+            float totalDistance = Vector3.Distance(nodes[currentNodeNumber - 1] ? nodes[currentNodeNumber - 1].position : player.transform.position, currentNode.position);
+            qDistNodes = totalDistance * 0.25f;
 
             switch (currentNode.GetComponent<Node>().nodeEventList[0].eventType)
             {
@@ -70,20 +68,6 @@ public class GameManager : MonoBehaviour
                     break;
             }
         }
-    }
-
-    public void SetNodeAndPlayerPosition()
-    {
-        currentNode = nodes[currentNodeNumber];
-
-        player.transform.position = currentNode.position;
-        List<NodeListItem> l = currentNode.GetComponent<Node>().nodeEventList;
-        if (l[0].eventType == Util.EventType.stop)
-        {
-            player.pVelocity = 0f;
-            player.willStop = true;
-        }
-        justStarted = false;
     }
 
     public void RestartLevel()
@@ -105,7 +89,6 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1f;
         currentNodeNumber = 0;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
-        //uih.sceneLoader.LoadSceneWithDelay(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void GamePause(bool p)
@@ -114,14 +97,8 @@ public class GameManager : MonoBehaviour
         uih.pauseScreenParent.SetActive(p);
     }
 
-    //private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    //{
-    //    Time.timeScale = 1f;
-    //}
-
     private void OnDestroy()
     {
-        //SceneManager.sceneLoaded -= OnSceneLoaded;
         Inputs.key_esc -= () => GamePause(Time.timeScale != 0f);
     }
 

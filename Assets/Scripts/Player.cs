@@ -33,9 +33,9 @@ public class Player : MonoBehaviour
         if (!isJumping)
         {
             Vector3 xz = new(GameManager.Main.currentNode.position.x, transform.position.y, GameManager.Main.currentNode.position.z);
-            float distFromNode = Vector3.Distance(transform.position, xz);
+            //float distFromNode = Vector3.Distance(transform.position, xz);
             float currSpeed = pVelocity;
-            if (willStop && distFromNode < GameManager.Main.qDistNodes) currSpeed = distFromNode <= 0.1f ? 0 : pVelocity * (distFromNode / GameManager.Main.qDistNodes);
+            //if (willStop && distFromNode < GameManager.Main.qDistNodes) currSpeed = distFromNode <= 0.1f ? 0 : pVelocity * (distFromNode / GameManager.Main.qDistNodes);
 
             if (isWalking) controller.Move(Time.deltaTime * currSpeed * targetVector);
         }
@@ -88,6 +88,7 @@ public class Player : MonoBehaviour
                     break;
 
                 case Util.EventType.walk:
+                    isWalking = true;
                     pVelocity = action.param_f;
                     willJump = false;
                     if (willStop)
@@ -99,7 +100,7 @@ public class Player : MonoBehaviour
                     break;
 
                 case Util.EventType.stop:
-                    //isWalking = false;
+                    isWalking = false;
                     //willStop = isWalking ? true : false;
                     break;
 
