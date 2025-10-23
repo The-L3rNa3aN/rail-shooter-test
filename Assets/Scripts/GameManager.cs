@@ -24,13 +24,24 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        player = Instantiate(prefab_player);
+        //NEW
+        currentNode = nodes[currentNodeNumber];
+
+        player = Instantiate(prefab_player, currentNode.position, Quaternion.identity);
 
         Camera.main.transform.parent = player.cameraContainer;
         Camera.main.transform.localPosition = Vector3.zero;
         Camera.main.transform.rotation = Camera.main.transform.parent.rotation;
 
-        SetNodeAndPlayerPosition();
+        //NEW
+        List<NodeListItem> l = currentNode.GetComponent<Node>().nodeEventList;
+        if (l[0].eventType == Util.EventType.stop)
+        {
+            player.pVelocity = 0f;
+            player.willStop = true;
+        }
+        justStarted = false;
+        //SetNodeAndPlayerPosition();
 
         //Pause menu.
         Inputs.key_esc += () => GamePause(Time.timeScale != 0f);
